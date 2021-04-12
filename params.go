@@ -1,5 +1,6 @@
 package lambdabuilders
 
+// Params represents the parameters in the JSON-RPC call to lambda-builders
 // https://github.com/aws/aws-lambda-builders/blob/develop/DESIGN.md#command-line-interface-internal
 type Params struct {
 	ProtocolVersion ParamsProtocolVersion  `json:"__protocol_version"`
@@ -13,6 +14,7 @@ type Params struct {
 	Options         map[string]interface{} `json:"options"`
 }
 
+// ParamsCapability is the 3-tuple configuring a certain workflow to build Lambda functions
 type ParamsCapability struct {
 	Language             string `json:"language"`
 	DependencyManager    string `json:"dependency_manager"`
@@ -22,7 +24,5 @@ type ParamsCapability struct {
 type ParamsProtocolVersion string
 
 const (
-	ProtocolVersion01 ParamsProtocolVersion = "0.1"
-	ProtocolVersion02 ParamsProtocolVersion = "0.2"
 	ProtocolVersion03 ParamsProtocolVersion = "0.3"
 )

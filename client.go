@@ -9,13 +9,17 @@ import (
 	"github.com/powerman/rpc-codec/jsonrpc2"
 )
 
-// Client represents the entity that can launch lambda-builders and interface with it via JSON-RPC
+// Client represents the entity that can launch lambda-builders and interface with it via JSON-RPC.
+// Create it via NewClient
 type Client struct {
 	lambdaBuildersPath string
 }
 
+// ClientOption represents the functiona interface to customize Client
 type ClientOption func(client *Client) error
 
+// WithLambdaBuilders is a ClientOption to specify the path to the lambda-builders executable.
+// This is optional: if it's not provided, the default PATH will be used to look it up.
 func WithLambdaBuilders(path string) ClientOption {
 	return func(client *Client) error {
 		client.lambdaBuildersPath = path
@@ -23,6 +27,7 @@ func WithLambdaBuilders(path string) ClientOption {
 	}
 }
 
+// NewClient is used to create a new instance of a Client - to interface with lambda-builders
 func NewClient(opts ...ClientOption) (*Client, error) {
 	var c Client
 	var err error
@@ -44,6 +49,7 @@ func NewClient(opts ...ClientOption) (*Client, error) {
 	return &c, nil
 }
 
+// rwCloserCmd is used to wrap exec.Cmd to expose a single io.ReadWriteCloser interface
 type rwCloserCmd struct {
 	io.WriteCloser
 	io.ReadCloser
@@ -76,12 +82,17 @@ func (rwc *rwCloserCmd) Close() error {
 	return result
 }
 
+// ServiceMethod is used to define the lambda-builders method to be called.
 type ServiceMethod string
 
 const (
+	// ServiceMethodBuild may be used to call "LambdaBuilder.build"
+	// As of today, this is the only available method exposed by lambda-builders:
+	// https://github.com/aws/aws-lambda-builders/blob/165f92f35753d87e4abe1115fd2399826b371e1f/aws_lambda_builders/__main__.py#L90-L92
 	ServiceMethodBuild ServiceMethod = "LambdaBuilder.build"
 )
 
+// GenericCall may be used for any call to lambda-builders
 func (c *Client) GenericCall(serviceMethod ServiceMethod, args, reply interface{}) error {
 	lambdaBuilders := exec.Command(c.lambdaBuildersPath)
 
