@@ -21,8 +21,10 @@ type ParamsCapability struct {
 	ApplicationFramework string `json:"application_framework"`
 }
 
+// ParamsProtocolVersion defines the versions of the JSON-RPC API exposed by lambda-builders
 type ParamsProtocolVersion string
 
 const (
+	// ProtocolVersion03 is the only one we support as of today
 	ProtocolVersion03 ParamsProtocolVersion = "0.3"
 )
