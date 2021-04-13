@@ -36,3 +36,27 @@ func TestBuild_go(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func ExampleBuilder_Build() error {
+	c, err := NewClient()
+	if err != nil {
+		return err
+	}
+
+	b, err := c.NewBuilder("go", "modules", "")
+	if err != nil {
+		return err
+	}
+
+	err = b.Build(
+		"/path/to/source",
+		"/path/to/compile",
+		"/path/to/scratchdir",
+		"/path/to/source/go.mod",
+		lambdabuilders.WithRuntime("go1.x"),
+		lambdabuilders.WithOptions(map[string]interface{}{
+			"artifact_executable_name": "my-handler",
+		}),
+	)
+	return err
+}
